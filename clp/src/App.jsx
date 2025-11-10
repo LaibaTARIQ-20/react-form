@@ -1,6 +1,8 @@
 import './App.css';
 import Nav from './components/nav.jsx';
-import Signin from './components/signin.jsx';
+import Signin from './pages/signin.jsx';
+import Signup from './pages/signup.jsx';
+import ForgotPassword from './pages/forgot.jsx';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
@@ -10,11 +12,13 @@ function Home() {
 
 function App() {
   return (
+    
     <BrowserRouter>
-      <Nav />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/signin" element={<Signin />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
     </BrowserRouter>
   );
