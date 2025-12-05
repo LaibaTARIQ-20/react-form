@@ -40,6 +40,7 @@ const Review = ({ data }) => {
         textAlign: "center",
         border: "1px solid #e0e0e0",
         borderRadius: 2,
+        minHeight: "200px",
         height: "100%",
         display: "flex",
         flexDirection: "column",
@@ -65,7 +66,7 @@ const Review = ({ data }) => {
       <Typography
         variant="caption"
         color={file ? "success.main" : "text.secondary"}
-        sx={{ mt: 1, mb: 2 }}
+        sx={{ mt: 1, mb: 2, wordBreak: "break-word", maxWidth: "100%" }}
       >
         {displayValue(file)}
       </Typography>
@@ -164,17 +165,17 @@ const Review = ({ data }) => {
           </Typography>
         </Box>
         <Divider sx={{ mb: 3 }} />
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={4}>
+        <Grid container spacing={3} sx={{ display: "flex", flexWrap: "wrap" }}>
+          <Grid item xs={12} sm={6} md={4}>
             <DocumentPreview
               label="Profile Picture"
               file={data.profilePicture}
             />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <DocumentPreview label="CNIC Front" file={data.cnicFront} />
           </Grid>
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} sm={6} md={4}>
             <DocumentPreview label="CNIC Back" file={data.cnicBack} />
           </Grid>
         </Grid>
