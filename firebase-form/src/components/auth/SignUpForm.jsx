@@ -1,4 +1,4 @@
-// src/components/auth/SignUpForm.jsx - FIXED VERSION
+// src/components/auth/SignUpForm.jsx - WITH PROPER VALIDATION
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -35,6 +35,7 @@ const SignUpForm = () => {
 
   const password = watch("password");
 
+  // ✅ VALIDATION RULES
   const validateRequired = (fieldName) => (value) => {
     if (!value || value.trim() === "") return `${fieldName} is required`;
     return true;
@@ -76,7 +77,7 @@ const SignUpForm = () => {
       await signUp(data.email, data.password, mappedRole, {
         firstName: data.firstName,
         lastName: data.lastName,
-        displayRole: data.role, // Store original role selection
+        displayRole: data.role,
         profileCompleted: false,
       });
       navigate("/profile");
@@ -127,6 +128,7 @@ const SignUpForm = () => {
             errors={errors}
             label="First Name *"
             placeholder="Enter first name"
+            rules={{ validate: validateRequired("First Name") }} // ✅ VALIDATION
           />
           <ControlledTextField
             name="lastName"
@@ -134,6 +136,7 @@ const SignUpForm = () => {
             errors={errors}
             label="Last Name *"
             placeholder="Enter last name"
+            rules={{ validate: validateRequired("Last Name") }} // ✅ VALIDATION
           />
         </Box>
 
@@ -146,6 +149,7 @@ const SignUpForm = () => {
             label="Email Address *"
             placeholder="Enter your email"
             type="email"
+            rules={{ validate: validateEmail }} // ✅ VALIDATION
           />
         </Box>
 
@@ -158,6 +162,7 @@ const SignUpForm = () => {
             label="Select Role *"
             options={roleOptions}
             placeholder="Choose your role"
+            rules={{ required: "Please select your role" }} // ✅ VALIDATION
           />
         </Box>
 
@@ -170,6 +175,7 @@ const SignUpForm = () => {
             label="Password *"
             placeholder="Create a password"
             type="password"
+            rules={{ validate: validatePassword }} // ✅ VALIDATION
           />
         </Box>
 
@@ -182,6 +188,7 @@ const SignUpForm = () => {
             label="Confirm Password *"
             placeholder="Confirm your password"
             type="password"
+            rules={{ validate: validateConfirmPassword }} // ✅ VALIDATION
           />
         </Box>
 

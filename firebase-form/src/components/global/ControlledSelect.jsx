@@ -1,4 +1,4 @@
-// src/components/global/ControlledSelect.jsx
+// src/components/global/ControlledSelect.jsx - WITH VALIDATION SUPPORT
 import React from "react";
 import {
   FormControl,
@@ -15,28 +15,25 @@ const ControlledSelect = ({
   errors,
   label,
   options = [],
-  placeholder = "Select an option",
-  fullWidth = true,
+  placeholder = "",
+  rules = {},
+  sx = {},
+  ...props
 }) => {
   return (
     <Controller
       name={name}
       control={control}
+      rules={rules} // ✅ Pass validation rules to Controller
       render={({ field }) => (
-        <FormControl fullWidth={fullWidth} error={!!errors[name]}>
-          <InputLabel shrink id={`${name}-label`}>
-            {label}
-          </InputLabel>
-          <Select
-            {...field}
-            labelId={`${name}-label`}
-            label={label}
-            displayEmpty
-            notched
-          >
-            <MenuItem value="">
-              <em>{placeholder}</em>
-            </MenuItem>
+        <FormControl fullWidth error={!!errors[name]} sx={sx}>
+          <InputLabel>{label}</InputLabel>
+          <Select {...field} label={label} {...props}>
+            {placeholder && (
+              <MenuItem value="" disabled>
+                {placeholder}
+              </MenuItem>
+            )}
             {options.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
@@ -44,7 +41,7 @@ const ControlledSelect = ({
             ))}
           </Select>
           {errors[name] && (
-            <FormHelperText>{errors[name].message}</FormHelperText>
+            <FormHelperText>{errors[name]?.message}</FormHelperText>
           )}
         </FormControl>
       )}

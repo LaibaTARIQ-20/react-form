@@ -1,4 +1,4 @@
-// src/components/auth/LoginForm.jsx - REFACTORED
+// src/components/auth/LoginForm.jsx - WITH PROPER VALIDATION
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -27,6 +27,7 @@ const LoginForm = () => {
     },
   });
 
+  // ✅ VALIDATION RULES
   const validateEmail = (value) => {
     if (!value) return "Email is required";
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -80,6 +81,7 @@ const LoginForm = () => {
           label="Email Address"
           placeholder="Enter your email"
           type="email"
+          rules={{ validate: validateEmail }} // ✅ VALIDATION APPLIED
           sx={{ mb: 2 }}
         />
 
@@ -90,6 +92,7 @@ const LoginForm = () => {
           label="Password"
           placeholder="Enter your password"
           type="password"
+          rules={{ validate: validatePassword }} // ✅ VALIDATION APPLIED
           sx={{ mb: 3 }}
         />
 

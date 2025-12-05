@@ -1,4 +1,4 @@
-// src/components/global/ControlledTextField.jsx
+// src/components/global/ControlledTextField.jsx - WITH VALIDATION SUPPORT
 import React from "react";
 import { TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
@@ -11,31 +11,30 @@ const ControlledTextField = ({
   placeholder,
   type = "text",
   multiline = false,
-  rows = 1,
-  disabled = false,
-  inputProps = {},
+  rows = 4,
+  rules = {}, // ✅ Accept validation rules
   sx = {},
-  fullWidth = true,
+  ...props
 }) => {
   return (
     <Controller
       name={name}
       control={control}
+      rules={rules} // ✅ Pass validation rules to Controller
       render={({ field }) => (
         <TextField
           {...field}
-          fullWidth={fullWidth}
+          fullWidth
           label={label}
+          placeholder={placeholder}
           type={type}
           multiline={multiline}
-          rows={rows}
-          disabled={disabled}
+          rows={multiline ? rows : undefined}
           error={!!errors[name]}
           helperText={errors[name]?.message}
-          InputLabelProps={{ shrink: true }}
-          placeholder={placeholder}
-          inputProps={inputProps}
+          variant="outlined"
           sx={sx}
+          {...props}
         />
       )}
     />
