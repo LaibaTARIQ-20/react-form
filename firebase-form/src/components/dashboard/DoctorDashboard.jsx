@@ -1,26 +1,22 @@
+// src/components/dashboard/DoctorDashboard.jsx - REFACTORED
 import React, { useEffect, useState } from "react";
 import {
   Box,
   Typography,
-  Paper,
-  Card,
-  CardContent,
   Grid,
-  Avatar,
   Button,
   Chip,
-  Divider,
   List,
   ListItem,
-  ListItemText,
   ListItemAvatar,
+  ListItemText,
+  Avatar,
 } from "@mui/material";
 import {
   Stethoscope,
   Users,
   Calendar,
   Activity,
-  LogOut,
   Award,
   MapPin,
   Phone,
@@ -32,6 +28,12 @@ import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../config/firebase";
+import {
+  PageContainer,
+  ContentCard,
+  StatCard,
+  DashboardHeader,
+} from "../global";
 
 const DoctorDashboard = () => {
   const { user, logout } = useAuth();
@@ -94,176 +96,94 @@ const DoctorDashboard = () => {
     { id: 3, patient: "Hassan Raza", time: "2:00 PM", type: "Check-up" },
   ];
 
+  const chips = [
+    {
+      icon: <Award size={16} />,
+      label: doctorData?.specialization || "General Practitioner",
+      color: "primary",
+    },
+    {
+      label: `${doctorData?.experience || "0"} Years Experience`,
+      variant: "outlined",
+    },
+  ];
+
+  const additionalInfo = [
+    <>
+      <Mail size={16} /> {user?.email}
+    </>,
+    doctorData?.mobileNo && (
+      <>
+        <Phone size={16} /> {doctorData.mobileNo}
+      </>
+    ),
+    doctorData?.hospitalName && (
+      <>
+        <MapPin size={16} /> {doctorData.hospitalName}
+      </>
+    ),
+  ].filter(Boolean);
+
+  const professionalDetails = [
+    {
+      icon: <Award size={20} color="#1976d2" />,
+      label: "Degree",
+      value: doctorData?.degree,
+    },
+    {
+      icon: <Activity size={20} color="#1976d2" />,
+      label: "License",
+      value: doctorData?.licenseNumber,
+    },
+    doctorData?.consultationFee && {
+      icon: <DollarSign size={20} color="#2e7d32" />,
+      label: "Consultation Fee",
+      value: `PKR ${doctorData.consultationFee}`,
+    },
+    doctorData?.availability && {
+      icon: <Clock size={20} color="#ed6c02" />,
+      label: "Available",
+      value: doctorData.availability,
+    },
+  ].filter(Boolean);
+
   return (
-    <Box sx={{ p: 4, minHeight: "100vh", bgcolor: "#f5f5f5" }}>
-      {/* Header Section */}
-      <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "flex-start",
-            mb: 3,
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center", flex: 1 }}>
-            {doctorData?.profilePicture ? (
-              <Avatar
-                src={doctorData.profilePicture}
-                sx={{ width: 100, height: 100, mr: 3 }}
-              />
-            ) : (
-              <Avatar
-                sx={{
-                  width: 100,
-                  height: 100,
-                  bgcolor: "#2e7d32",
-                  fontSize: "2.5rem",
-                  mr: 3,
-                }}
-              >
-                <Stethoscope size={50} />
-              </Avatar>
-            )}
-            <Box sx={{ flex: 1 }}>
-              <Typography variant="h4" fontWeight="bold" gutterBottom>
-                Dr.{" "}
-                {doctorData?.fullName || `${user?.firstName} ${user?.lastName}`}
-              </Typography>
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
-              >
-                <Chip
-                  icon={<Award size={16} />}
-                  label={doctorData?.specialization || "General Practitioner"}
-                  color="primary"
-                  size="small"
-                />
-                <Chip
-                  label={`${doctorData?.experience || "0"} Years Experience`}
-                  size="small"
-                  variant="outlined"
-                />
-              </Box>
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}
-              >
-                <Mail size={16} /> {user?.email}
-              </Typography>
-              {doctorData?.mobileNo && (
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 1,
-                    mb: 0.5,
-                  }}
-                >
-                  <Phone size={16} /> {doctorData.mobileNo}
-                </Typography>
-              )}
-              {doctorData?.hospitalName && (
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ display: "flex", alignItems: "center", gap: 1 }}
-                >
-                  <MapPin size={16} /> {doctorData.hospitalName}
-                </Typography>
-              )}
-            </Box>
-          </Box>
-          <Button
-            variant="outlined"
-            color="error"
-            startIcon={<LogOut size={20} />}
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
-        </Box>
-
-        <Divider sx={{ my: 3 }} />
-
-        {/* Professional Details */}
+    <PageContainer>
+      <DashboardHeader
+        avatarSrc={doctorData?.profilePicture}
+        avatarIcon={<Stethoscope size={50} />}
+        avatarBgColor="#2e7d32"
+        title={`Dr. ${
+          doctorData?.fullName || `${user?.firstName} ${user?.lastName}`
+        }`}
+        chips={chips}
+        additionalInfo={additionalInfo}
+        onLogout={handleLogout}
+      >
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Award size={20} color="#1976d2" />
-              <Typography variant="body2">
-                <strong>Degree:</strong> {doctorData?.degree || "Not specified"}
-              </Typography>
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Activity size={20} color="#1976d2" />
-              <Typography variant="body2">
-                <strong>License:</strong>{" "}
-                {doctorData?.licenseNumber || "Not specified"}
-              </Typography>
-            </Box>
-          </Grid>
-          {doctorData?.consultationFee && (
-            <Grid item xs={12} md={6}>
+          {professionalDetails.map((detail, index) => (
+            <Grid item xs={12} md={6} key={index}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <DollarSign size={20} color="#2e7d32" />
+                {detail.icon}
                 <Typography variant="body2">
-                  <strong>Consultation Fee:</strong> PKR{" "}
-                  {doctorData.consultationFee}
+                  <strong>{detail.label}:</strong>{" "}
+                  {detail.value || "Not specified"}
                 </Typography>
               </Box>
             </Grid>
-          )}
-          {doctorData?.availability && (
-            <Grid item xs={12} md={6}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Clock size={20} color="#ed6c02" />
-                <Typography variant="body2">
-                  <strong>Available:</strong> {doctorData.availability}
-                </Typography>
-              </Box>
-            </Grid>
-          )}
+          ))}
         </Grid>
-      </Paper>
+      </DashboardHeader>
 
-      {/* Stats Cards */}
       <Grid container spacing={3} sx={{ mb: 4 }}>
         {stats.map((stat, index) => (
           <Grid item xs={12} md={4} key={index}>
-            <Card
-              sx={{
-                bgcolor: stat.bgColor,
-                transition: "transform 0.2s",
-                "&:hover": {
-                  transform: "translateY(-4px)",
-                  boxShadow: 3,
-                },
-              }}
-            >
-              <CardContent>
-                <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                  {stat.icon}
-                  <Typography variant="h6" fontWeight="bold" sx={{ ml: 2 }}>
-                    {stat.title}
-                  </Typography>
-                </Box>
-                <Typography variant="h3" fontWeight="bold">
-                  {stat.value}
-                </Typography>
-              </CardContent>
-            </Card>
+            <StatCard {...stat} />
           </Grid>
         ))}
       </Grid>
 
-      {/* Quick Actions */}
-      <Paper elevation={3} sx={{ p: 4, mb: 4 }}>
+      <ContentCard>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
           Quick Actions
         </Typography>
@@ -293,10 +213,9 @@ const DoctorDashboard = () => {
             </Button>
           </Grid>
         </Grid>
-      </Paper>
+      </ContentCard>
 
-      {/* Today's Schedule */}
-      <Paper elevation={3} sx={{ p: 4 }}>
+      <ContentCard>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
           Today's Appointments
         </Typography>
@@ -326,8 +245,8 @@ const DoctorDashboard = () => {
             </ListItem>
           ))}
         </List>
-      </Paper>
-    </Box>
+      </ContentCard>
+    </PageContainer>
   );
 };
 

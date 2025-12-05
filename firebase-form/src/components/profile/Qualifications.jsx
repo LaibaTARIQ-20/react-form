@@ -1,20 +1,32 @@
+// src/components/profile/Qualifications.jsx - REFACTORED
 import React from "react";
-import {
-  Box,
-  TextField,
-  Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Paper,
-  FormHelperText,
-  Grid,
-} from "@mui/material";
-import { Controller } from "react-hook-form";
+import { Box, Typography, Paper } from "@mui/material";
+import { FormSection, ControlledTextField, ControlledSelect } from "../global";
 
 const Qualifications = ({ control, errors, userRole }) => {
-  // If user is not a doctor, show message
+  const specializationOptions = [
+    { value: "General Practitioner", label: "General Practitioner" },
+    { value: "Cardiology", label: "Cardiology" },
+    { value: "Dermatology", label: "Dermatology" },
+    { value: "Endocrinology", label: "Endocrinology" },
+    { value: "Gastroenterology", label: "Gastroenterology" },
+    { value: "Gynecology", label: "Gynecology" },
+    { value: "Hematology", label: "Hematology" },
+    { value: "Nephrology", label: "Nephrology" },
+    { value: "Neurology", label: "Neurology" },
+    { value: "Oncology", label: "Oncology" },
+    { value: "Ophthalmology", label: "Ophthalmology" },
+    { value: "Orthopedics", label: "Orthopedics" },
+    { value: "Pediatrics", label: "Pediatrics" },
+    { value: "Psychiatry", label: "Psychiatry" },
+    { value: "Pulmonology", label: "Pulmonology" },
+    { value: "Radiology", label: "Radiology" },
+    { value: "Rheumatology", label: "Rheumatology" },
+    { value: "Surgery", label: "Surgery" },
+    { value: "Urology", label: "Urology" },
+    { value: "Other", label: "Other" },
+  ];
+
   if (userRole !== "doctor") {
     return (
       <Box sx={{ p: 2 }}>
@@ -33,17 +45,13 @@ const Qualifications = ({ control, errors, userRole }) => {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Paper sx={{ p: 3, mb: 4, bgcolor: "#f5f5f5" }}>
-        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-          🎓 Professional Qualifications
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Please provide your professional credentials and qualifications
-        </Typography>
-      </Paper>
+      <FormSection
+        icon="🎓"
+        title="Professional Qualifications"
+        description="Please provide your professional credentials and qualifications"
+      />
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-        {/* Row 1: Degree + Specialization */}
         <Box
           sx={{
             display: "grid",
@@ -51,74 +59,24 @@ const Qualifications = ({ control, errors, userRole }) => {
             gap: 3,
           }}
         >
-          <Controller
+          <ControlledTextField
             name="degree"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Medical Degree *"
-                error={!!errors.degree}
-                helperText={errors.degree?.message}
-                InputLabelProps={{ shrink: true }}
-                placeholder="e.g., MBBS, MD, DO"
-              />
-            )}
+            errors={errors}
+            label="Medical Degree *"
+            placeholder="e.g., MBBS, MD, DO"
           />
 
-          <Controller
+          <ControlledSelect
             name="specialization"
             control={control}
-            render={({ field }) => (
-              <FormControl fullWidth error={!!errors.specialization}>
-                <InputLabel shrink id="specialization-label">
-                  Specialization *
-                </InputLabel>
-                <Select
-                  {...field}
-                  labelId="specialization-label"
-                  label="Specialization *"
-                  displayEmpty
-                  notched
-                >
-                  <MenuItem value="">
-                    <em>Select Specialization</em>
-                  </MenuItem>
-                  <MenuItem value="General Practitioner">
-                    General Practitioner
-                  </MenuItem>
-                  <MenuItem value="Cardiology">Cardiology</MenuItem>
-                  <MenuItem value="Dermatology">Dermatology</MenuItem>
-                  <MenuItem value="Endocrinology">Endocrinology</MenuItem>
-                  <MenuItem value="Gastroenterology">Gastroenterology</MenuItem>
-                  <MenuItem value="Gynecology">Gynecology</MenuItem>
-                  <MenuItem value="Hematology">Hematology</MenuItem>
-                  <MenuItem value="Nephrology">Nephrology</MenuItem>
-                  <MenuItem value="Neurology">Neurology</MenuItem>
-                  <MenuItem value="Oncology">Oncology</MenuItem>
-                  <MenuItem value="Ophthalmology">Ophthalmology</MenuItem>
-                  <MenuItem value="Orthopedics">Orthopedics</MenuItem>
-                  <MenuItem value="Pediatrics">Pediatrics</MenuItem>
-                  <MenuItem value="Psychiatry">Psychiatry</MenuItem>
-                  <MenuItem value="Pulmonology">Pulmonology</MenuItem>
-                  <MenuItem value="Radiology">Radiology</MenuItem>
-                  <MenuItem value="Rheumatology">Rheumatology</MenuItem>
-                  <MenuItem value="Surgery">Surgery</MenuItem>
-                  <MenuItem value="Urology">Urology</MenuItem>
-                  <MenuItem value="Other">Other</MenuItem>
-                </Select>
-                {errors.specialization && (
-                  <FormHelperText>
-                    {errors.specialization.message}
-                  </FormHelperText>
-                )}
-              </FormControl>
-            )}
+            errors={errors}
+            label="Specialization *"
+            options={specializationOptions}
+            placeholder="Select Specialization"
           />
         </Box>
 
-        {/* Row 2: License Number + Years of Experience */}
         <Box
           sx={{
             display: "grid",
@@ -126,42 +84,25 @@ const Qualifications = ({ control, errors, userRole }) => {
             gap: 3,
           }}
         >
-          <Controller
+          <ControlledTextField
             name="licenseNumber"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Medical License Number *"
-                error={!!errors.licenseNumber}
-                helperText={errors.licenseNumber?.message}
-                InputLabelProps={{ shrink: true }}
-                placeholder="Enter your license number"
-              />
-            )}
+            errors={errors}
+            label="Medical License Number *"
+            placeholder="Enter your license number"
           />
 
-          <Controller
+          <ControlledTextField
             name="experience"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Years of Experience *"
-                type="number"
-                error={!!errors.experience}
-                helperText={errors.experience?.message}
-                InputLabelProps={{ shrink: true }}
-                placeholder="Enter years of experience"
-                inputProps={{ min: 0, max: 60 }}
-              />
-            )}
+            errors={errors}
+            label="Years of Experience *"
+            placeholder="Enter years of experience"
+            type="number"
+            inputProps={{ min: 0, max: 60 }}
           />
         </Box>
 
-        {/* Row 3: Hospital/Clinic Name + Consultation Fee */}
         <Box
           sx={{
             display: "grid",
@@ -169,59 +110,34 @@ const Qualifications = ({ control, errors, userRole }) => {
             gap: 3,
           }}
         >
-          <Controller
+          <ControlledTextField
             name="hospitalName"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Hospital/Clinic Name"
-                error={!!errors.hospitalName}
-                helperText={errors.hospitalName?.message}
-                InputLabelProps={{ shrink: true }}
-                placeholder="Enter hospital or clinic name"
-              />
-            )}
+            errors={errors}
+            label="Hospital/Clinic Name"
+            placeholder="Enter hospital or clinic name"
           />
 
-          <Controller
+          <ControlledTextField
             name="consultationFee"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Consultation Fee (PKR)"
-                type="number"
-                error={!!errors.consultationFee}
-                helperText={errors.consultationFee?.message}
-                InputLabelProps={{ shrink: true }}
-                placeholder="Enter consultation fee"
-                inputProps={{ min: 0 }}
-              />
-            )}
+            errors={errors}
+            label="Consultation Fee (PKR)"
+            placeholder="Enter consultation fee"
+            type="number"
+            inputProps={{ min: 0 }}
           />
         </Box>
 
-        {/* Row 4: Availability - Full Width */}
         <Box>
-          <Controller
+          <ControlledTextField
             name="availability"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Availability/Working Hours"
-                multiline
-                rows={3}
-                error={!!errors.availability}
-                helperText={errors.availability?.message}
-                InputLabelProps={{ shrink: true }}
-                placeholder="e.g., Mon-Fri: 9AM-5PM, Sat: 10AM-2PM"
-              />
-            )}
+            errors={errors}
+            label="Availability/Working Hours"
+            placeholder="e.g., Mon-Fri: 9AM-5PM, Sat: 10AM-2PM"
+            multiline
+            rows={3}
           />
         </Box>
       </Box>

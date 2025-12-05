@@ -1,27 +1,19 @@
+// src/components/profile/Review.jsx - REFACTORED
 import React from "react";
 import {
   Box,
   Typography,
-  Paper,
   Grid,
   Divider,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
-  TableRow,
   Avatar,
 } from "@mui/material";
 import { CheckCircle } from "lucide-react";
+import { FormSection, ContentCard, InfoRow } from "../global";
 
 const Review = ({ data, userRole }) => {
-  const InfoRow = ({ label, value }) => (
-    <TableRow>
-      <TableCell sx={{ fontWeight: 600, width: "40%" }}>{label}</TableCell>
-      <TableCell>{value || "Not provided"}</TableCell>
-    </TableRow>
-  );
-
   const DocumentPreview = ({ label, file }) => (
     <Box sx={{ textAlign: "center" }}>
       <Typography
@@ -49,14 +41,11 @@ const Review = ({ data, userRole }) => {
 
   return (
     <Box sx={{ p: 2 }}>
-      <Paper sx={{ p: 3, mb: 4, bgcolor: "#f5f5f5" }}>
-        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-          ✅ Review Your Information
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Please review all information before submitting
-        </Typography>
-      </Paper>
+      <FormSection
+        icon="✅"
+        title="Review Your Information"
+        description="Please review all information before submitting"
+      />
 
       <Box sx={{ textAlign: "center", mb: 4 }}>
         {data.profilePicture ? (
@@ -81,7 +70,7 @@ const Review = ({ data, userRole }) => {
 
       <Grid container spacing={3}>
         <Grid item xs={12}>
-          <Paper sx={{ p: 3 }}>
+          <ContentCard elevation={2}>
             <Typography variant="h6" gutterBottom fontWeight={600}>
               📝 Basic Information
             </Typography>
@@ -101,11 +90,11 @@ const Review = ({ data, userRole }) => {
                 </TableBody>
               </Table>
             </TableContainer>
-          </Paper>
+          </ContentCard>
         </Grid>
 
         <Grid item xs={12}>
-          <Paper sx={{ p: 3 }}>
+          <ContentCard elevation={2}>
             <Typography variant="h6" gutterBottom fontWeight={600}>
               📄 Documents
             </Typography>
@@ -124,12 +113,12 @@ const Review = ({ data, userRole }) => {
                 <DocumentPreview label="CNIC Back" file={data.cnicBack} />
               </Grid>
             </Grid>
-          </Paper>
+          </ContentCard>
         </Grid>
 
         {userRole === "doctor" && (
           <Grid item xs={12}>
-            <Paper sx={{ p: 3 }}>
+            <ContentCard elevation={2}>
               <Typography variant="h6" gutterBottom fontWeight={600}>
                 🎓 Professional Qualifications
               </Typography>
@@ -150,10 +139,23 @@ const Review = ({ data, userRole }) => {
                       label="Years of Experience"
                       value={data.experience}
                     />
+                    <InfoRow
+                      label="Hospital/Clinic"
+                      value={data.hospitalName}
+                    />
+                    <InfoRow
+                      label="Consultation Fee"
+                      value={
+                        data.consultationFee
+                          ? `PKR ${data.consultationFee}`
+                          : null
+                      }
+                    />
+                    <InfoRow label="Availability" value={data.availability} />
                   </TableBody>
                 </Table>
               </TableContainer>
-            </Paper>
+            </ContentCard>
           </Grid>
         )}
       </Grid>

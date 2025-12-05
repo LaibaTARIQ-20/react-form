@@ -1,29 +1,27 @@
+// src/components/profile/BasicProfile.jsx - REFACTORED
 import React from "react";
+import { Box } from "@mui/material";
 import {
-  Box,
-  TextField,
-  Typography,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Paper,
-  FormHelperText,
-} from "@mui/material";
-import { Controller } from "react-hook-form";
-import { MuiTelInput } from "mui-tel-input";
+  FormSection,
+  ControlledTextField,
+  ControlledSelect,
+  ControlledPhoneInput,
+} from "../global";
 
 const BasicProfile = ({ control, errors }) => {
+  const genderOptions = [
+    { value: "male", label: "Male" },
+    { value: "female", label: "Female" },
+    { value: "other", label: "Other" },
+  ];
+
   return (
     <Box sx={{ p: 2 }}>
-      <Paper sx={{ p: 3, mb: 4, bgcolor: "#f5f5f5" }}>
-        <Typography variant="h6" gutterBottom sx={{ fontWeight: 600 }}>
-          📝 Basic Information
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Please provide your personal details and basic information
-        </Typography>
-      </Paper>
+      <FormSection
+        icon="📝"
+        title="Basic Information"
+        description="Please provide your personal details and basic information"
+      />
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
         <Box
@@ -33,65 +31,29 @@ const BasicProfile = ({ control, errors }) => {
             gap: 3,
           }}
         >
-          <Controller
+          <ControlledTextField
             name="fullName"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Full Name (As per CNIC) *"
-                error={!!errors.fullName}
-                helperText={errors.fullName?.message}
-                InputLabelProps={{ shrink: true }}
-                placeholder="Enter your full name"
-              />
-            )}
+            errors={errors}
+            label="Full Name (As per CNIC) *"
+            placeholder="Enter your full name"
           />
 
-          <Controller
+          <ControlledTextField
             name="fatherName"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Father's Name *"
-                error={!!errors.fatherName}
-                helperText={errors.fatherName?.message}
-                InputLabelProps={{ shrink: true }}
-                placeholder="Enter father's name"
-              />
-            )}
+            errors={errors}
+            label="Father's Name *"
+            placeholder="Enter father's name"
           />
 
-          <Controller
+          <ControlledSelect
             name="gender"
             control={control}
-            render={({ field }) => (
-              <FormControl fullWidth error={!!errors.gender}>
-                <InputLabel shrink id="gender-label">
-                  Gender *
-                </InputLabel>
-                <Select
-                  {...field}
-                  labelId="gender-label"
-                  label="Gender *"
-                  displayEmpty
-                  notched
-                >
-                  <MenuItem value="">
-                    <em>Select Gender</em>
-                  </MenuItem>
-                  <MenuItem value="male">Male</MenuItem>
-                  <MenuItem value="female">Female</MenuItem>
-                  <MenuItem value="other">Other</MenuItem>
-                </Select>
-                {errors.gender && (
-                  <FormHelperText>{errors.gender.message}</FormHelperText>
-                )}
-              </FormControl>
-            )}
+            errors={errors}
+            label="Gender *"
+            options={genderOptions}
+            placeholder="Select Gender"
           />
         </Box>
 
@@ -102,60 +64,28 @@ const BasicProfile = ({ control, errors }) => {
             gap: 3,
           }}
         >
-          <Controller
+          <ControlledTextField
             name="dateOfBirth"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Date of Birth *"
-                type="date"
-                error={!!errors.dateOfBirth}
-                helperText={errors.dateOfBirth?.message}
-                InputLabelProps={{ shrink: true }}
-              />
-            )}
+            errors={errors}
+            label="Date of Birth *"
+            type="date"
           />
 
-          <Controller
+          <ControlledTextField
             name="cnic"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="CNIC/POR NO *"
-                error={!!errors.cnic}
-                helperText={errors.cnic?.message || "13 digits without dashes"}
-                inputProps={{ maxLength: 13 }}
-                InputLabelProps={{ shrink: true }}
-                placeholder="Enter 13 digit CNIC"
-                onChange={(e) => {
-                  const value = e.target.value.replace(/\D/g, "").slice(0, 13);
-                  field.onChange(value);
-                }}
-              />
-            )}
+            errors={errors}
+            label="CNIC/POR NO *"
+            placeholder="Enter 13 digit CNIC"
+            inputProps={{ maxLength: 13 }}
           />
 
-          <Controller
+          <ControlledPhoneInput
             name="mobileNo"
             control={control}
-            render={({ field }) => (
-              <MuiTelInput
-                {...field}
-                fullWidth
-                label="Mobile No *"
-                defaultCountry="PK"
-                preferredCountries={["PK", "US", "GB", "AE", "SA"]}
-                forceCallingCode
-                focusOnSelectCountry
-                error={!!errors.mobileNo}
-                helperText={errors.mobileNo?.message}
-                InputLabelProps={{ shrink: true }}
-              />
-            )}
+            errors={errors}
+            label="Mobile No *"
           />
         </Box>
 
@@ -166,55 +96,33 @@ const BasicProfile = ({ control, errors }) => {
             gap: 3,
           }}
         >
-          <Controller
+          <ControlledTextField
             name="email"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Email"
-                disabled
-                InputLabelProps={{ shrink: true }}
-                sx={{ bgcolor: "#f5f5f5" }}
-              />
-            )}
+            errors={errors}
+            label="Email"
+            disabled
+            sx={{ bgcolor: "#f5f5f5" }}
           />
 
-          <Controller
+          <ControlledTextField
             name="district"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="District of Residence *"
-                error={!!errors.district}
-                helperText={errors.district?.message}
-                InputLabelProps={{ shrink: true }}
-                placeholder="Enter your district"
-              />
-            )}
+            errors={errors}
+            label="District of Residence *"
+            placeholder="Enter your district"
           />
         </Box>
 
         <Box>
-          <Controller
+          <ControlledTextField
             name="postalAddress"
             control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                fullWidth
-                label="Postal Address *"
-                multiline
-                rows={3}
-                error={!!errors.postalAddress}
-                helperText={errors.postalAddress?.message}
-                InputLabelProps={{ shrink: true }}
-                placeholder="Enter your complete postal address"
-              />
-            )}
+            errors={errors}
+            label="Postal Address *"
+            placeholder="Enter your complete postal address"
+            multiline
+            rows={3}
           />
         </Box>
       </Box>
