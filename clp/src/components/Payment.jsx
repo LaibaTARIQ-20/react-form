@@ -1,27 +1,16 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import {
-  Button,
-  Box,
-  Typography,
-  Checkbox,
-  FormControlLabel,
-  FormControl,
-  FormHelperText,
-  FormGroup,
-} from "@mui/material";
+import { Button, Box, Typography } from "@mui/material";
+import FormCheckboxGroup from "./formComponents/FormCheckboxGroup";
 
 function Payment({ onSubmit, onBack, defaultValues, isSubmitting }) {
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     defaultValues: defaultValues || {
-      creditCard: false,
-      mailCheck: false,
-      inPerson: false,
+      paymentMethods: {
+        creditCard: false,
+        mailCheck: false,
+        inPerson: false,
+      },
     },
   });
 
@@ -29,15 +18,11 @@ function Payment({ onSubmit, onBack, defaultValues, isSubmitting }) {
     onSubmit(data);
   };
 
-  const watchCreditCard = watch("creditCard");
-  const watchMailCheck = watch("mailCheck");
-  const watchInPerson = watch("inPerson");
-
-  const validatePaymentMethod = () => {
-    if (!watchCreditCard && !watchMailCheck && !watchInPerson) {
-      return "Please select at least one payment method";
-    }
-    return true;
+  const validatePaymentMethod = (value) => {
+    const methods = value || {};
+    const hasSelectedMethod =
+      methods.creditCard || methods.mailCheck || methods.inPerson;
+    return hasSelectedMethod || "Please select at least one payment method";
   };
 
   return (
@@ -50,43 +35,21 @@ function Payment({ onSubmit, onBack, defaultValues, isSubmitting }) {
         Payment is due 3 days prior to the start of the class
       </Typography>
 
-      <FormControl
-        component="fieldset"
-        error={!!errors.paymentValidation}
+      <Typography variant="subtitle1" gutterBottom>
+        Payment Method:
+      </Typography>
+
+      <FormCheckboxGroup
+        name="paymentMethods"
+        control={control}
+        options={[
+          { value: "creditCard", label: "Credit Card" },
+          { value: "mailCheck", label: "Mail a Check" },
+          { value: "inPerson", label: "In-person at school" },
+        ]}
+        rules={{ validate: validatePaymentMethod }}
         sx={{ mb: 4 }}
-      >
-        <Typography variant="subtitle1" gutterBottom>
-          Payment Method:
-        </Typography>
-
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox {...register("creditCard")} />}
-            label="Credit Card"
-          />
-
-          <FormControlLabel
-            control={<Checkbox {...register("mailCheck")} />}
-            label="Mail a Check"
-          />
-
-          <FormControlLabel
-            control={<Checkbox {...register("inPerson")} />}
-            label="In-person at school"
-          />
-
-          <input
-            type="hidden"
-            {...register("paymentValidation", {
-              validate: validatePaymentMethod,
-            })}
-          />
-        </FormGroup>
-
-        {errors.paymentValidation && (
-          <FormHelperText>{errors.paymentValidation.message}</FormHelperText>
-        )}
-      </FormControl>
+      />
 
       <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
         <Button

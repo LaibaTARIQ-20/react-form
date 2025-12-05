@@ -1,23 +1,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import {
-  TextField,
-  Button,
-  Box,
-  Grid,
-  FormControl,
-  Select,
-  MenuItem,
-  FormHelperText,
-  Typography,
-} from "@mui/material";
+import { Button, Box, Grid, Typography } from "@mui/material";
+import FormTextField from "./formComponents/FormTextField";
+import FormSelectField from "./formComponents/FormSelectField";
 
 function Education({ onNext, onBack, defaultValues }) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     defaultValues: defaultValues || {},
   });
 
@@ -47,32 +35,31 @@ function Education({ onNext, onBack, defaultValues }) {
       {/* School Name and Graduation Date */}
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
+          <FormTextField
+            name="schoolName"
+            control={control}
             label="High School or Equivalent Name"
-            {...register("schoolName", {
+            rules={{
               required: "School name is required",
               minLength: { value: 2, message: "Minimum 2 characters" },
-            })}
-            error={!!errors.schoolName}
-            helperText={errors.schoolName?.message}
+            }}
           />
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
+          <FormTextField
+            name="graduationDate"
+            control={control}
             label="Graduation Date"
             placeholder="MM-DD-YYYY"
-            {...register("graduationDate", {
+            rules={{
               required: "Graduation date is required",
               pattern: {
                 value: /^\d{2}-\d{2}-\d{4}$/,
                 message: "Please use MM-DD-YYYY format",
               },
-            })}
-            error={!!errors.graduationDate}
-            helperText={errors.graduationDate?.message || "Date"}
+            }}
+            helperText="Date"
           />
         </Grid>
       </Grid>
@@ -84,52 +71,33 @@ function Education({ onNext, onBack, defaultValues }) {
 
       <Grid container spacing={2} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
+          <FormTextField
+            name="schoolCity"
+            control={control}
             label="City"
-            {...register("schoolCity", {
-              required: "City is required",
-            })}
-            error={!!errors.schoolCity}
-            helperText={errors.schoolCity?.message || "City"}
+            rules={{ required: "City is required" }}
+            helperText="City"
           />
         </Grid>
 
         <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
+          <FormTextField
+            name="schoolState"
+            control={control}
             label="State / Province"
-            {...register("schoolState", {
-              required: "State/Province is required",
-            })}
-            error={!!errors.schoolState}
-            helperText={errors.schoolState?.message || "State / Province"}
+            rules={{ required: "State/Province is required" }}
+            helperText="State / Province"
           />
         </Grid>
 
         <Grid item xs={12}>
-          <FormControl fullWidth error={!!errors.schoolCountry}>
-            <Select
-              displayEmpty
-              {...register("schoolCountry", {
-                required: "Please select a country",
-              })}
-              defaultValue=""
-            >
-              <MenuItem value="">Please Select</MenuItem>
-              {countries.map((country) => (
-                <MenuItem key={country} value={country}>
-                  {country}
-                </MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>Country</FormHelperText>
-            {errors.schoolCountry && (
-              <FormHelperText error>
-                {errors.schoolCountry.message}
-              </FormHelperText>
-            )}
-          </FormControl>
+          <FormSelectField
+            name="schoolCountry"
+            control={control}
+            options={countries}
+            rules={{ required: "Please select a country" }}
+            helperText="Country"
+          />
         </Grid>
       </Grid>
 

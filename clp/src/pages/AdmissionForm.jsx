@@ -31,13 +31,38 @@ function AdmissionForm() {
   };
 
   return (
-    <Container maxWidth="md" sx={{ py: 4 }}>
-      <Paper elevation={3} sx={{ p: 4 }}>
-        <Box mb={4}>
-          <Typography variant="h4" align="center" gutterBottom>
+    <Container
+      maxWidth="md"
+      sx={{
+        py: 4,
+        px: { xs: 2, sm: 3 },
+      }}
+    >
+      <Paper
+        elevation={2}
+        sx={{
+          p: { xs: 2, sm: 3 },
+          width: "100%",
+        }}
+      >
+        <Box mb={3}>
+          <Typography
+            variant="h5"
+            align="center"
+            gutterBottom
+            sx={{
+              fontWeight: 500,
+              mb: 1,
+            }}
+          >
             COLLEGE ADMISSION FORM
           </Typography>
-          <Typography variant="body2" align="center" color="text.secondary">
+          <Typography
+            variant="body2"
+            align="center"
+            color="text.secondary"
+            sx={{ fontSize: "0.875rem" }}
+          >
             Enter your admission information below
           </Typography>
         </Box>

@@ -1,26 +1,12 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import {
-  TextField,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormControl,
-  FormLabel,
-  FormHelperText,
-  Select,
-  MenuItem,
-  Button,
-  Box,
-  Grid,
-} from "@mui/material";
+import { Button, Box, Grid, Typography } from "@mui/material";
+import FormTextField from "./formComponents/FormTextField";
+import FormSelectField from "./formComponents/FormSelectField";
+import FormRadioGroup from "./formComponents/FormRadioGroup";
 
 function PersonalInfo({ onNext, defaultValues }) {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { control, handleSubmit } = useForm({
     defaultValues: defaultValues || {},
   });
 
@@ -43,11 +29,11 @@ function PersonalInfo({ onNext, defaultValues }) {
     "December",
   ];
 
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
-  const years = Array.from({ length: 61 }, (_, i) => 2010 - i);
+  const days = Array.from({ length: 31 }, (_, i) => (i + 1).toString());
+  const years = Array.from({ length: 61 }, (_, i) => (2010 - i).toString());
 
   const countries = [
-    "United States",
+    "Pakistan",
     "Canada",
     "United Kingdom",
     "Australia",
@@ -55,417 +41,297 @@ function PersonalInfo({ onNext, defaultValues }) {
     "France",
     "India",
     "China",
-    "Japan",
-    "Brazil",
-    "Mexico",
-    "Spain",
-    "Italy",
-    "Netherlands",
-    "Sweden",
-    "Norway",
-    "Denmark",
-    "Finland",
   ];
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       {/* Name Section */}
-      <FormLabel component="legend" sx={{ mb: 1, fontWeight: "bold" }}>
+      <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
         Name
-      </FormLabel>
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            label="First Name"
-            {...register("firstName", {
+      </Typography>
+      <Grid container spacing={0} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={4} sx={{ pr: { sm: 1 }, mb: { xs: 2, sm: 0 } }}>
+          <FormTextField
+            name="firstName"
+            control={control}
+            placeholder="First Name"
+            rules={{
               required: "First name is required",
               minLength: { value: 2, message: "Minimum 2 characters" },
-            })}
-            error={!!errors.firstName}
-            helperText={errors.firstName?.message}
+            }}
+            helperText="First Name"
           />
         </Grid>
-
-        <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            label="Middle Initial"
-            {...register("middleInitial", {
-              required: "Middle initial is required",
-              maxLength: { value: 1, message: "Only 1 character" },
-            })}
-            error={!!errors.middleInitial}
-            helperText={errors.middleInitial?.message}
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          sx={{ px: { sm: 0.5 }, mb: { xs: 2, sm: 0 } }}
+        >
+          <FormTextField
+            name="middleName"
+            control={control}
+            placeholder="Middle Name"
+            helperText="Middle Name"
           />
         </Grid>
-
-        <Grid item xs={12} sm={4}>
-          <TextField
-            fullWidth
-            label="Last Name"
-            {...register("lastName", {
+        <Grid item xs={12} sm={4} sx={{ pl: { sm: 1 } }}>
+          <FormTextField
+            name="lastName"
+            control={control}
+            placeholder="Last Name"
+            rules={{
               required: "Last name is required",
               minLength: { value: 2, message: "Minimum 2 characters" },
-            })}
-            error={!!errors.lastName}
-            helperText={errors.lastName?.message}
+            }}
+            helperText="Last Name"
           />
         </Grid>
       </Grid>
 
       {/* Birth Date */}
-      <FormLabel component="legend" sx={{ mb: 1, fontWeight: "bold" }}>
+      <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
         Birth Date
-      </FormLabel>
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={4}>
-          <FormControl fullWidth error={!!errors.birthMonth}>
-            <Select
-              displayEmpty
-              {...register("birthMonth", {
-                required: "Please select a month",
-              })}
-              defaultValue=""
-            >
-              <MenuItem value="">Please select a month</MenuItem>
-              {months.map((month, index) => (
-                <MenuItem key={index} value={month}>
-                  {month}
-                </MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>Month</FormHelperText>
-            {errors.birthMonth && (
-              <FormHelperText error>{errors.birthMonth.message}</FormHelperText>
-            )}
-          </FormControl>
+      </Typography>
+      <Grid container spacing={0} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={4} sx={{ pr: { sm: 1 }, mb: { xs: 2, sm: 0 } }}>
+          <FormSelectField
+            name="birthMonth"
+            control={control}
+            options={months}
+            placeholder="Please select a month"
+            rules={{ required: "Please select a month" }}
+            helperText="Month"
+          />
         </Grid>
-
-        <Grid item xs={12} sm={4}>
-          <FormControl fullWidth error={!!errors.birthDay}>
-            <Select
-              displayEmpty
-              {...register("birthDay", {
-                required: "Please select a day",
-              })}
-              defaultValue=""
-            >
-              <MenuItem value="">Please select a day</MenuItem>
-              {days.map((day) => (
-                <MenuItem key={day} value={day}>
-                  {day}
-                </MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>Day</FormHelperText>
-            {errors.birthDay && (
-              <FormHelperText error>{errors.birthDay.message}</FormHelperText>
-            )}
-          </FormControl>
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          sx={{ px: { sm: 0.5 }, mb: { xs: 2, sm: 0 } }}
+        >
+          <FormSelectField
+            name="birthDay"
+            control={control}
+            options={days}
+            placeholder="Please select a day"
+            rules={{ required: "Please select a day" }}
+            helperText="Day"
+          />
         </Grid>
-
-        <Grid item xs={12} sm={4}>
-          <FormControl fullWidth error={!!errors.birthYear}>
-            <Select
-              displayEmpty
-              {...register("birthYear", {
-                required: "Please select a year",
-              })}
-              defaultValue=""
-            >
-              <MenuItem value="">Please select a year</MenuItem>
-              {years.map((year) => (
-                <MenuItem key={year} value={year}>
-                  {year}
-                </MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>Year</FormHelperText>
-            {errors.birthYear && (
-              <FormHelperText error>{errors.birthYear.message}</FormHelperText>
-            )}
-          </FormControl>
+        <Grid item xs={12} sm={4} sx={{ pl: { sm: 1 } }}>
+          <FormSelectField
+            name="birthYear"
+            control={control}
+            options={years}
+            placeholder="Please select a year"
+            rules={{ required: "Please select a year" }}
+            helperText="Year"
+          />
         </Grid>
       </Grid>
 
       {/* Gender and Country */}
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={6}>
-          <FormControl component="fieldset" error={!!errors.gender}>
-            <FormLabel component="legend">Gender</FormLabel>
-            <RadioGroup row>
-              <FormControlLabel
-                value="male"
-                control={
-                  <Radio
-                    {...register("gender", {
-                      required: "Please select your gender",
-                    })}
-                  />
-                }
-                label="Male"
-              />
-              <FormControlLabel
-                value="female"
-                control={
-                  <Radio
-                    {...register("gender", {
-                      required: "Please select your gender",
-                    })}
-                  />
-                }
-                label="Female"
-              />
-            </RadioGroup>
-            {errors.gender && (
-              <FormHelperText>{errors.gender.message}</FormHelperText>
-            )}
-          </FormControl>
+      <Grid container spacing={0} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={6} sx={{ pr: { sm: 1 }, mb: { xs: 2, sm: 0 } }}>
+          <FormRadioGroup
+            name="gender"
+            control={control}
+            label="Gender"
+            options={[
+              { value: "male", label: "Male" },
+              { value: "female", label: "Female" },
+            ]}
+            rules={{ required: "Please select your gender" }}
+            row
+          />
         </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth error={!!errors.country}>
-            <Select
-              displayEmpty
-              {...register("country", {
-                required: "Please select a country",
-              })}
-              defaultValue=""
-            >
-              <MenuItem value="">Please Select</MenuItem>
-              {countries.map((country) => (
-                <MenuItem key={country} value={country}>
-                  {country}
-                </MenuItem>
-              ))}
-            </Select>
-            <FormHelperText>
-              {errors.country
-                ? errors.country.message
-                : "Of which country are you a citizen?"}
-            </FormHelperText>
-          </FormControl>
+        <Grid item xs={12} sm={6} sx={{ pl: { sm: 1 } }}>
+          <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+            Of which country are you a citizen?
+          </Typography>
+          <FormSelectField
+            name="country"
+            control={control}
+            options={countries}
+            placeholder="Please Select"
+            rules={{ required: "Please select a country" }}
+          />
         </Grid>
       </Grid>
 
       {/* Phone and Email */}
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Phone"
+      <Grid container spacing={0} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={6} sx={{ pr: { sm: 1 }, mb: { xs: 2, sm: 0 } }}>
+          <FormTextField
+            name="phone"
+            control={control}
             placeholder="(000) 000-0000"
-            {...register("phone", {
+            rules={{
               required: "Phone number is required",
               pattern: {
                 value: /^[0-9\s()-]+$/,
                 message: "Please enter a valid phone number",
               },
-            })}
-            error={!!errors.phone}
-            helperText={errors.phone?.message}
+            }}
+            helperText="Phone"
           />
         </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="E-mail Address"
+        <Grid item xs={12} sm={6} sx={{ pl: { sm: 1 } }}>
+          <FormTextField
+            name="email"
+            control={control}
             placeholder="ex: myname@example.com"
             type="email"
-            {...register("email", {
+            rules={{
               required: "Email is required",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "Please enter a valid email address",
               },
-            })}
-            error={!!errors.email}
-            helperText={errors.email?.message || "example@example.com"}
+            }}
+            helperText="E-mail Address"
           />
         </Grid>
       </Grid>
 
       {/* Mailing Address */}
-      <FormLabel component="legend" sx={{ mb: 1, fontWeight: "bold" }}>
+      <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
         Mailing Address
-      </FormLabel>
+      </Typography>
       <Box sx={{ mb: 3 }}>
-        <TextField
-          fullWidth
-          label="Street Address"
-          sx={{ mb: 2 }}
-          {...register("streetAddress", {
-            required: "Street address is required",
-          })}
-          error={!!errors.streetAddress}
-          helperText={errors.streetAddress?.message || "Street Address"}
-        />
+        <Box sx={{ mb: 2 }}>
+          <FormTextField
+            name="streetAddress"
+            control={control}
+            placeholder="Street Address"
+            rules={{ required: "Street address is required" }}
+            helperText="Street Address"
+          />
+        </Box>
 
-        <TextField
-          fullWidth
-          label="Street Address Line 2"
-          sx={{ mb: 2 }}
-          {...register("streetAddress2")}
-          helperText="Street Address Line 2"
-        />
+        <Box sx={{ mb: 2 }}>
+          <FormTextField
+            name="streetAddress2"
+            control={control}
+            placeholder="Street Address Line 2"
+            helperText="Street Address Line 2"
+          />
+        </Box>
 
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="City"
-              {...register("city", {
-                required: "City is required",
-              })}
-              error={!!errors.city}
-              helperText={errors.city?.message || "City"}
+        <Grid container spacing={0} sx={{ mb: 2 }}>
+          <Grid
+            item
+            xs={12}
+            sm={6}
+            sx={{ pr: { sm: 1 }, mb: { xs: 2, sm: 0 } }}
+          >
+            <FormTextField
+              name="city"
+              control={control}
+              placeholder="City"
+              rules={{ required: "City is required" }}
+              helperText="City"
             />
           </Grid>
-
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="State / Province"
-              {...register("stateProvince", {
-                required: "State/Province is required",
-              })}
-              error={!!errors.stateProvince}
-              helperText={errors.stateProvince?.message || "State / Province"}
+          <Grid item xs={12} sm={6} sx={{ pl: { sm: 1 } }}>
+            <FormTextField
+              name="stateProvince"
+              control={control}
+              placeholder="State / Province"
+              rules={{ required: "State/Province is required" }}
+              helperText="State / Province"
             />
           </Grid>
         </Grid>
 
-        <TextField
-          fullWidth
-          label="Postal / Zip Code"
-          sx={{ mt: 2 }}
-          {...register("postalCode", {
-            required: "Postal code is required",
-          })}
-          error={!!errors.postalCode}
-          helperText={errors.postalCode?.message || "Postal / Zip Code"}
+        <FormTextField
+          name="postalCode"
+          control={control}
+          placeholder="Postal / Zip Code"
+          rules={{ required: "Postal code is required" }}
+          helperText="Postal / Zip Code"
         />
       </Box>
 
       {/* Emergency Contact */}
-      <FormLabel component="legend" sx={{ mb: 1, fontWeight: "bold" }}>
+      <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
         Emergency Contact
-      </FormLabel>
-      <Grid container spacing={2} sx={{ mb: 3 }}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="First Name"
-            {...register("emergencyFirstName", {
-              required: "Emergency contact first name is required",
-            })}
-            error={!!errors.emergencyFirstName}
-            helperText={errors.emergencyFirstName?.message || "First Name"}
+      </Typography>
+      <Grid container spacing={0} sx={{ mb: 3 }}>
+        <Grid item xs={12} sm={6} sx={{ pr: { sm: 1 }, mb: 2 }}>
+          <FormTextField
+            name="emergencyFirstName"
+            control={control}
+            placeholder="First Name"
+            rules={{ required: "Emergency contact first name is required" }}
+            helperText="First Name"
           />
         </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Last Name"
-            {...register("emergencyLastName", {
-              required: "Emergency contact last name is required",
-            })}
-            error={!!errors.emergencyLastName}
-            helperText={errors.emergencyLastName?.message || "Last Name"}
+        <Grid item xs={12} sm={6} sx={{ pl: { sm: 1 }, mb: 2 }}>
+          <FormTextField
+            name="emergencyLastName"
+            control={control}
+            placeholder="Last Name"
+            rules={{ required: "Emergency contact last name is required" }}
+            helperText="Last Name"
           />
         </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Email"
-            type="email"
+        <Grid item xs={12} sm={6} sx={{ pr: { sm: 1 }, mb: 2 }}>
+          <FormTextField
+            name="emergencyEmail"
+            control={control}
             placeholder="example@example.com"
-            {...register("emergencyEmail", {
+            type="email"
+            rules={{
               required: "Emergency contact email is required",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
                 message: "Please enter a valid email address",
               },
-            })}
-            error={!!errors.emergencyEmail}
-            helperText={errors.emergencyEmail?.message || "example@example.com"}
+            }}
+            helperText="Email"
           />
         </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Relationship"
-            {...register("emergencyRelationship", {
-              required: "Relationship is required",
-            })}
-            error={!!errors.emergencyRelationship}
-            helperText={errors.emergencyRelationship?.message || "Relationship"}
+        <Grid item xs={12} sm={6} sx={{ pl: { sm: 1 }, mb: 2 }}>
+          <FormTextField
+            name="emergencyRelationship"
+            control={control}
+            placeholder="Relationship"
+            rules={{ required: "Relationship is required" }}
+            helperText="Relationship"
           />
         </Grid>
-
         <Grid item xs={12}>
-          <TextField
-            fullWidth
-            label="Phone Number"
+          <FormTextField
+            name="emergencyPhone"
+            control={control}
             placeholder="Please enter a valid phone number"
-            {...register("emergencyPhone", {
+            rules={{
               required: "Emergency contact phone is required",
               pattern: {
                 value: /^[0-9\s()-]+$/,
                 message: "Please enter a valid phone number",
               },
-            })}
-            error={!!errors.emergencyPhone}
-            helperText={
-              errors.emergencyPhone?.message ||
-              "Please enter a valid phone number"
-            }
+            }}
+            helperText="Phone Number"
           />
         </Grid>
       </Grid>
 
       {/* Language Question */}
-      <FormControl
-        component="fieldset"
-        error={!!errors.languages}
+      <FormRadioGroup
+        name="languages"
+        control={control}
+        label="Do you speak any languages other than English?"
+        options={[
+          { value: "yes", label: "Yes" },
+          { value: "no", label: "No" },
+        ]}
+        rules={{ required: "Please select an option" }}
+        row
         sx={{ mb: 3 }}
-      >
-        <FormLabel component="legend">
-          Do you speak any languages other than English?
-        </FormLabel>
-        <RadioGroup row>
-          <FormControlLabel
-            value="yes"
-            control={
-              <Radio
-                {...register("languages", {
-                  required: "Please select an option",
-                })}
-              />
-            }
-            label="Yes"
-          />
-          <FormControlLabel
-            value="no"
-            control={
-              <Radio
-                {...register("languages", {
-                  required: "Please select an option",
-                })}
-              />
-            }
-            label="No"
-          />
-        </RadioGroup>
-        {errors.languages && (
-          <FormHelperText>{errors.languages.message}</FormHelperText>
-        )}
-      </FormControl>
+      />
 
       {/* Next Button */}
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
