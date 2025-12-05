@@ -32,17 +32,23 @@ const SmartDashboard = () => {
     return <Navigate to="/login" replace />;
   }
 
-  // Redirect based on role
-  if (user.role === "moderator") {
-    return <Navigate to="/moderator/dashboard" replace />;
-  } else if (user.role === "admin" || user.role === "doctor") {
-    return <Navigate to="/doctor/dashboard" replace />;
-  } else if (user.role === "user" || user.role === "patient") {
-    return <Navigate to="/patient/dashboard" replace />;
-  }
+  console.log("User role:", user.role); // Debug log
 
-  // Default fallback
-  return <Navigate to="/patient/dashboard" replace />;
+  // Handle all possible role variations
+  switch (user.role) {
+    case "moderator":
+      return <Navigate to="/moderator/dashboard" replace />;
+    case "admin":
+    case "doctor":
+      return <Navigate to="/doctor/dashboard" replace />;
+    case "user":
+    case "patient":
+      return <Navigate to="/patient/dashboard" replace />;
+    default:
+      // If role is not recognized, default to patient
+      console.warn("Unknown role:", user.role, "- defaulting to patient");
+      return <Navigate to="/patient/dashboard" replace />;
+  }
 };
 
 function App() {
@@ -78,7 +84,7 @@ function App() {
             }
           />
 
-          {/* ========== PATIENT ROUTES (role: "user" or "patient") ========== */}
+          {/* ========== PATIENT ROUTES ========== */}
           <Route
             path="/patient/dashboard"
             element={
@@ -112,7 +118,7 @@ function App() {
             }
           />
 
-          {/* ========== DOCTOR ROUTES (role: "admin" or "doctor") ========== */}
+          {/* ========== DOCTOR ROUTES ========== */}
           <Route
             path="/doctor/dashboard"
             element={
@@ -146,7 +152,7 @@ function App() {
             }
           />
 
-          {/* ========== MODERATOR ROUTES (role: "moderator") ========== */}
+          {/* ========== MODERATOR ROUTES ========== */}
           <Route
             path="/moderator/dashboard"
             element={
@@ -202,7 +208,7 @@ function App() {
             }
           />
 
-          {/* ========== SHARED ROUTES (All authenticated users) ========== */}
+          {/* ========== SHARED ROUTES ========== */}
           <Route
             path="/profile"
             element={

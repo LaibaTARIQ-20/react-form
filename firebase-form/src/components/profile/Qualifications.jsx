@@ -1,9 +1,22 @@
-// src/components/profile/Qualifications.jsx - REFACTORED
+// src/components/profile/Qualifications.jsx - FIXED ROLE DETECTION
 import React from "react";
 import { Box, Typography, Paper } from "@mui/material";
+import { useAuth } from "../../hooks/useAuth";
 import { FormSection, ControlledTextField, ControlledSelect } from "../global";
 
-const Qualifications = ({ control, errors, userRole }) => {
+const Qualifications = ({ control, errors }) => {
+  const { user } = useAuth();
+
+  // Check if user is a doctor based on ACTUAL role stored in Firebase
+  // role can be "admin" (doctor) or "doctor"
+  const isDoctor =
+    user?.role === "admin" ||
+    user?.role === "doctor" ||
+    user?.displayRole === "doctor";
+
+  console.log("User role in Qualifications:", user?.role); // Debug
+  console.log("Is Doctor:", isDoctor); // Debug
+
   const specializationOptions = [
     { value: "General Practitioner", label: "General Practitioner" },
     { value: "Cardiology", label: "Cardiology" },
@@ -27,7 +40,8 @@ const Qualifications = ({ control, errors, userRole }) => {
     { value: "Other", label: "Other" },
   ];
 
-  if (userRole !== "doctor") {
+  // If NOT a doctor, show this message
+  if (!isDoctor) {
     return (
       <Box sx={{ p: 2 }}>
         <Paper sx={{ p: 4, textAlign: "center", bgcolor: "#f5f5f5" }}>
@@ -43,6 +57,7 @@ const Qualifications = ({ control, errors, userRole }) => {
     );
   }
 
+  // If IS a doctor, show qualification form
   return (
     <Box sx={{ p: 2 }}>
       <FormSection

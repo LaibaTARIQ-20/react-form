@@ -1,4 +1,4 @@
-// src/components/auth/SignUpForm.jsx - REFACTORED
+// src/components/auth/SignUpForm.jsx - FIXED VERSION
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -70,9 +70,13 @@ const SignUpForm = () => {
     setLoading(true);
 
     try {
-      await signUp(data.email, data.password, data.role, {
+      // Map "doctor" to "admin" for backend compatibility
+      const mappedRole = data.role === "doctor" ? "admin" : "user";
+
+      await signUp(data.email, data.password, mappedRole, {
         firstName: data.firstName,
         lastName: data.lastName,
+        displayRole: data.role, // Store original role selection
         profileCompleted: false,
       });
       navigate("/profile");
@@ -115,6 +119,7 @@ const SignUpForm = () => {
       }
     >
       <Box component="form" onSubmit={handleSubmit(onSubmit)}>
+        {/* First Name and Last Name - Side by Side */}
         <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
           <ControlledTextField
             name="firstName"
@@ -132,46 +137,55 @@ const SignUpForm = () => {
           />
         </Box>
 
-        <ControlledTextField
-          name="email"
-          control={control}
-          errors={errors}
-          label="Email Address *"
-          placeholder="Enter your email"
-          type="email"
-          sx={{ mb: 2 }}
-        />
+        {/* Email */}
+        <Box sx={{ mb: 2 }}>
+          <ControlledTextField
+            name="email"
+            control={control}
+            errors={errors}
+            label="Email Address *"
+            placeholder="Enter your email"
+            type="email"
+          />
+        </Box>
 
-        <ControlledSelect
-          name="role"
-          control={control}
-          errors={errors}
-          label="Select Role *"
-          options={roleOptions}
-          placeholder="Choose your role"
-          sx={{ mb: 2 }}
-        />
+        {/* Role Select */}
+        <Box sx={{ mb: 2 }}>
+          <ControlledSelect
+            name="role"
+            control={control}
+            errors={errors}
+            label="Select Role *"
+            options={roleOptions}
+            placeholder="Choose your role"
+          />
+        </Box>
 
-        <ControlledTextField
-          name="password"
-          control={control}
-          errors={errors}
-          label="Password *"
-          placeholder="Create a password"
-          type="password"
-          sx={{ mb: 2 }}
-        />
+        {/* Password */}
+        <Box sx={{ mb: 2 }}>
+          <ControlledTextField
+            name="password"
+            control={control}
+            errors={errors}
+            label="Password *"
+            placeholder="Create a password"
+            type="password"
+          />
+        </Box>
 
-        <ControlledTextField
-          name="confirmPassword"
-          control={control}
-          errors={errors}
-          label="Confirm Password *"
-          placeholder="Confirm your password"
-          type="password"
-          sx={{ mb: 3 }}
-        />
+        {/* Confirm Password */}
+        <Box sx={{ mb: 3 }}>
+          <ControlledTextField
+            name="confirmPassword"
+            control={control}
+            errors={errors}
+            label="Confirm Password *"
+            placeholder="Confirm your password"
+            type="password"
+          />
+        </Box>
 
+        {/* Submit Button */}
         <Button
           type="submit"
           fullWidth

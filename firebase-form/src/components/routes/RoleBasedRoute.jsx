@@ -1,23 +1,11 @@
+// src/components/auth/RoleBasedRoute.jsx - FIXED AUTO-REDIRECT
 import React from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-import {
-  Box,
-  CircularProgress,
-  Alert,
-  Paper,
-  Button,
-  Typography,
-} from "@mui/material";
-import { ShieldAlert } from "lucide-react";
+import { Box, CircularProgress } from "@mui/material";
 import { useAuth } from "../../hooks/useAuth";
 
-const RoleBasedRoute = ({
-  allowedRoles = [],
-  children,
-  redirectTo = "/dashboard",
-}) => {
+const RoleBasedRoute = ({ allowedRoles = [], children }) => {
   const { user, loading } = useAuth();
-  const navigate = useNavigate();
 
   if (loading) {
     return (
@@ -40,45 +28,29 @@ const RoleBasedRoute = ({
 
   const hasAccess = allowedRoles.includes(user.role);
 
+  console.log("RoleBasedRoute Check:", {
+    userRole: user.role,
+    allowedRoles,
+    hasAccess,
+  });
+
+  // If user doesn't have access, redirect to their correct dashboard
   if (!hasAccess) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "100vh",
-          bgcolor: "#f5f5f5",
-          p: 3,
-        }}
-      >
-        <Paper sx={{ p: 5, maxWidth: 500, textAlign: "center", boxShadow: 3 }}>
-          <ShieldAlert size={80} color="#d32f2f" style={{ marginBottom: 16 }} />
-          <Alert severity="error" sx={{ mb: 3 }}>
-            <strong>Access Denied</strong>
-          </Alert>
-          <Box sx={{ mb: 3 }}>
-            <Typography variant="h6" fontWeight="bold" gutterBottom>
-              You don't have permission to access this page
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-              Your current role: <strong>{user.role || "user"}</strong>
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Required role(s): <strong>{allowedRoles.join(", ")}</strong>
-            </Typography>
-          </Box>
-          <Button
-            variant="contained"
-            size="large"
-            onClick={() => navigate(redirectTo)}
-            sx={{ mt: 2 }}
-          >
-            Go to Your Dashboard
-          </Button>
-        </Paper>
-      </Box>
-    );
+    // Determine correct dashboard based on role
+    let redirectPath = "/dashboard"; // Default fallback
+
+    if (user.role === "moderator") {
+      redirectPath = "/moderator/dashboard";
+    } else if (user.role === "admin" || user.role === "doctor") {
+      redirectPath = "/doctor/dashboard";
+    } else if (user.role === "user" || user.role === "patient") {
+      redirectPath = "/patient/dashboard";
+    }
+
+    console.log("Access denied, redirecting to:", redirectPath);
+
+    // Auto-redirect to correct dashboard instead of showing error
+    return <Navigate to={redirectPath} replace />;
   }
 
   return children;
