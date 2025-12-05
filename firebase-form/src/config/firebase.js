@@ -2,25 +2,47 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
+// Firebase configuration using environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyA1k3EZ8K1TFCfBFx6gXeLGiTHL3s2suQY",
-  authDomain: "react-form-9b3a9.firebaseapp.com",
-  projectId: "react-form-9b3a9",
-  storageBucket: "react-form-9b3a9.firebasestorage.app",
-  messagingSenderId: "781424715360",
-  appId: "1:781424715360:web:e3cf76d90576ba68924505",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
+
+// Validate that all required environment variables are present
+const requiredEnvVars = [
+  "REACT_APP_FIREBASE_API_KEY",
+  "REACT_APP_FIREBASE_AUTH_DOMAIN",
+  "REACT_APP_FIREBASE_PROJECT_ID",
+  "REACT_APP_FIREBASE_STORAGE_BUCKET",
+  "REACT_APP_FIREBASE_MESSAGING_SENDER_ID",
+  "REACT_APP_FIREBASE_APP_ID",
+];
+
+const missingEnvVars = requiredEnvVars.filter(
+  (varName) => !process.env[varName]
+);
+
+if (missingEnvVars.length > 0) {
+  console.error(
+    "Missing required environment variables:",
+    missingEnvVars.join(", ")
+  );
+  throw new Error(
+    `Missing Firebase configuration. Please check your .env file.`
+  );
+}
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Initialize Firebase services
 export const auth = getAuth(app);
-
-// Initialize Firestore (for storing user roles)
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+
 export default app;
